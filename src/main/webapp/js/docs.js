@@ -79,10 +79,16 @@ DocPanel = Ext.extend(Ext.Panel, {
             },
             items : [ {
                 xtype : 'textfield',
-                fieldLabel : 'Method',
-                value : this.serviceKey + "@" + this.title,
+                fieldLabel : 'Class',
+                value : this.serviceKey,
                 readOnly : true,
-                name : 'methodName'
+                name : 'className'
+            },{
+            xtype : 'textfield',
+                fieldLabel : 'Method',
+                value : this.title,
+                readOnly : true,
+                name : 'packageName'
             }, {
                 xtype : 'combo',
                 fieldLabel : 'ServiceURL', // UI标签名称
@@ -91,8 +97,8 @@ DocPanel = Ext.extend(Ext.Panel, {
                 mode : 'local', // 数据模式, local为本地模式, 如果不设置,就显示不停的加载中...
                 readOnly : true, // 是否只读
                 triggerAction : 'all', // 显示所有下列数.必须指定为'all'
-                // width:330,
-                anchor : '90%',
+                //width:300,
+                anchor : '85%',
                 emptyText : '', // 没有默认值时,显示的字符串
                 store : new Ext.data.SimpleStore({ // 填充的数据
                     fields : [ 'text', 'value' ],
@@ -169,7 +175,7 @@ DocPanel = Ext.extend(Ext.Panel, {
         this.resultArea = new Ext.form.TextArea({
             fieldLabel : 'Result',
             xtype : 'textarea',
-            height : 390,
+            height : 430,
             name : 'result'
         });
         
