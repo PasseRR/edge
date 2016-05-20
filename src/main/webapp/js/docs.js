@@ -77,18 +77,12 @@ DocPanel = Ext.extend(Ext.Panel, {
                 // 这里是布局配置项 layout-specific configs go here
                 labelSeparator : ':'
             },
-            items : [ {
-                xtype : 'textfield',
-                fieldLabel : 'Class',
-                value : this.serviceKey,
-                readOnly : true,
-                name : 'className'
-            },{
+            items : [{
             xtype : 'textfield',
                 fieldLabel : 'Method',
-                value : this.title,
+                value : this.serviceKey+'@'+this.title,
                 readOnly : true,
-                name : 'packageName'
+                name : 'methodName'
             }, {
                 xtype : 'combo',
                 fieldLabel : 'ServiceURL', // UI标签名称

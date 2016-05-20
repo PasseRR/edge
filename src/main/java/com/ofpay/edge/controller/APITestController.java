@@ -3,7 +3,9 @@
  */
 package com.ofpay.edge.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.net.URLEncoder;
 import java.util.*;
 
 import org.slf4j.Logger;
@@ -214,8 +216,12 @@ public class APITestController {
             @RequestParam(required = false) String serviceUrl) {
 
         Map<String, Object> result = new HashMap<String, Object>();
-
-        String msg = "";
+        try {
+            params = new String(params.getBytes("iso-8859-1"), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String msg;
         try {
             String arr[] = methodName.split("@");
             String serviceKey = arr[0];
