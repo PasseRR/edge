@@ -283,6 +283,9 @@ a:hover {
 .icon-hide-inherited {
     background-image: url(../images/hide-inherited.gif) !important;
 }
+.icon-refresh {
+    background-image: url(../images/refresh.gif) !important;
+}
 
 #legend li {
 	line-height:16px;

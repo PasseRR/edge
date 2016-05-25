@@ -345,24 +345,31 @@ Ext.onReady(function() {
                 emptyText : 'Find a Class',
                 listeners : {
                     render : function(f) {
-                        f.el.on('keydown', filterTree, f, {
+                        f.el.on('keyup', filterTree, f, {
                             buffer : 350
                         });
                     }
                 }
             }), ' ', ' ', {
                 iconCls : 'icon-expand-all',
-                tooltip : 'Expand All',
+                tooltip : '展开',
                 handler : function() {
                     api.root.expand(true);
                 }
             }, '-', {
                 iconCls : 'icon-collapse-all',
-                tooltip : 'Collapse All',
+                tooltip : '收起',
                 handler : function() {
                     api.root.collapse(true);
                 }
-            } ]
+            }/*, '-', {
+                iconCls : 'icon-refresh',
+                tooltip : '重新加载',
+                handler : function() {
+                    // 重新加载接口jar包 不重启服务手动刷新加载
+                    //api.root.collapse(true);
+                }
+            } */]
         }) ]
     });
     
@@ -398,7 +405,7 @@ Ext.onReady(function() {
         }
         api.expandAll();
         
-        var re = new RegExp('^' + Ext.escapeRe(text), 'i');
+        var re = new RegExp(Ext.escapeRe(text), 'i');
         filter.filterBy(function(n) {
             return !n.attributes.isClass || re.test(n.text);
         });
