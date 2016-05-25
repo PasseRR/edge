@@ -89,7 +89,6 @@ public class APITestController {
 
         if (null == childNode) { // 若不存则创建node，并添加到children中
             childNode = new JSONTreeNode();
-            childNode = new JSONTreeNode();
             childNode.setId(nodeId);
             // childNode.setId(groupPrefix + "_" + nodeId);
             childNode.setText(nodeName);

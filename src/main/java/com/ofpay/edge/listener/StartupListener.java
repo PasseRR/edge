@@ -112,6 +112,7 @@ public class StartupListener implements ServletContextListener {
 
             // 启动文件监控线程
             fw.setDelay(interval * 1000);
+            fw.setDaemon(true);
             fw.start();
         }
     }
