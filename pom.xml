@@ -103,6 +103,24 @@
             <version>0.3</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.4.1</version>
+            <!-- Uncomment line below to use invokedynamic version of Groovy (requires
+                Java 7 or higher). -->
+            <!-- <classifier>indy</classifier> -->
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.gome.o2m</groupId>-->
+            <!--<artifactId>o2m-vc-jl-api</artifactId>-->
+            <!--<version>1.0.0.300-SNAPSHOT</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>com.gome.o2m</groupId>-->
+            <!--<artifactId>o2m-ac-vip-api</artifactId>-->
+            <!--<version>1.0.0.300-SNAPSHOT</version>-->
+        <!--</dependency>-->
     </dependencies>
     <distributionManagement>
         <repository>
@@ -116,4 +134,48 @@
             <url>https://repository-joecao.forge.cloudbees.com/snapshot/ </url>
         </snapshotRepository>
     </distributionManagement>
+    <!-- 配置接口包的仓库地址 -->
+    <repositories>
+        <repository>
+            <id>o2m</id>
+            <url>http://10.128.11.68:8081/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.8</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- 要引用的dubbo接口包 -->
+                    <!-- 包含接口包的引用包 -->
+                    <artifactItems>
+                        <artifactItem>
+                            <groupId>com.gome.o2m</groupId>
+                            <artifactId>o2m-ac-vip-api</artifactId>
+                            <version>1.0.0.300-SNAPSHOT</version>
+                            <classifier>jar-with-dependencies</classifier>
+                        </artifactItem>
+                        <artifactItem>
+                            <groupId>com.gome.o2m</groupId>
+                            <artifactId>o2m-vc-jl-api</artifactId>
+                            <version>1.0.0.300-SNAPSHOT</version>
+                            <classifier>jar-with-dependencies</classifier>
+                        </artifactItem>
+                    </artifactItems>
+                    <!-- 自动引入到target下 -->
+                    <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/third_lib</outputDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
