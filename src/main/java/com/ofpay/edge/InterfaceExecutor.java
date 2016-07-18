@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 
 import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.util.TypeUtils;
@@ -43,7 +44,7 @@ public class InterfaceExecutor {
         Object result;
 
         try {
-            Object[] params = convertParams(inputParamArray, method.getParameterTypes());
+            Object[] params = convertParams(inputParamArray, method.getGenericParameterTypes());
             result = method.invoke(target, params);
         } catch (IllegalArgumentException e) {
             result = e.getMessage();
@@ -56,7 +57,7 @@ public class InterfaceExecutor {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static Object[] convertParams(JSONArray inputParamArray, Class<?>[] paramTypes) throws Exception {
+    public static Object[] convertParams(JSONArray inputParamArray, Type[] paramTypes) throws Exception {
         Object[] paramArr;
 
         if (inputParamArray == null) {
@@ -74,34 +75,7 @@ public class InterfaceExecutor {
 
         for (int i = 0; i < paramArr.length; i++) {
             Object param = paramArr[i];
-            Class<?> paramType = paramTypes[i];
-
-            params[i] = TypeUtils.cast(param, paramType, ParserConfig.getGlobalInstance());
-//            if (InterfaceLoader.isWrapClass(paramType)) {
-//                params[i] = ConvertUtils.convert(param, paramType);
-//            } else if (paramType.isEnum()) {
-//                if (param instanceof String) {
-//                    String name = (String) param;
-//                    if (name.length() == 0) {
-//                        params[i] = null;
-//                    } else {
-//                        params[i] = Enum.valueOf((Class<? extends Enum>) paramType, name);
-//                    }
-//                } else if (param instanceof Number) {
-//                    int ordinal = ((Number) param).intValue();
-//
-//                    Method mt = paramType.getMethod("values");
-//                    Object[] values = (Object[]) mt.invoke(null);
-//                    for (Object value : values) {
-//                        Enum e = (Enum) value;
-//                        if (e.ordinal() == ordinal) {
-//                            params[i] = e;
-//                        }
-//                    }
-//                }
-//            } else if (param instanceof JSONObject) {
-//                params[i] = JSON.toJavaObject((JSONObject) param, paramType);
-//            }
+            params[i] = TypeUtils.cast(param, paramTypes[i], ParserConfig.getGlobalInstance());
         }
         return params;
     }

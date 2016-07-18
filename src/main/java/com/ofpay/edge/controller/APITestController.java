@@ -5,9 +5,12 @@ package com.ofpay.edge.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.util.*;
 
+import com.alibaba.dubbo.config.ReferenceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -226,20 +229,29 @@ public class APITestController {
             String serviceKey = arr[0];
             String mth = arr[1];
 
-            Object serviceBean = InterfaceLoader.getServiceBean(serviceKey, serviceUrl);
-            if (serviceBean == null) {
+            ReferenceConfig<Object> reference = InterfaceLoader.getServiceReference(serviceKey, serviceUrl);
+            Class<?> clazz = reference.getInterfaceClass();
+            Object serviceBean = reference.get();
+            if (serviceBean == null || clazz == null) {
                 msg = "找不到服务Bean";
             } else {
-                Method serviceMethod = InterfaceLoader.getServiceMethod(serviceBean, mth);
-                if (serviceMethod == null) {
+                Method method = null;
+                Method []methods = clazz.getDeclaredMethods();
+                for(Method m : methods){
+                    if(m.getName().equals(mth)){
+                        method = m;
+                        break;
+                    }
+                }
+                if (method == null) {
                     msg = "找不到服务Method";
                 } else {
-                    msg = InterfaceExecutor.execute(serviceBean, serviceMethod, JSON.parseArray(params));
+                    msg = InterfaceExecutor.execute(serviceBean, method, JSON.parseArray(params));
                 }
             }
 
         } catch (JSONException e) {
-            msg = "参数格式错误;";
+            msg = "参数格式错误," + e.getMessage();
         } catch (Exception e) {
             msg = "调用接口异常;" + InterfaceExecutor.getStackTrace(e);
         }

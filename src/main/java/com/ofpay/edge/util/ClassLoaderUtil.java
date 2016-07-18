@@ -72,9 +72,9 @@ public final class ClassLoaderUtil {
         }
         try {
             addURL.invoke(system, new Object[] { file.toURI().toURL() });
-            logger.debug("成功加载{}包：", new Object[] { file.getAbsolutePath() });
+            logger.debug("成功加载{}.", new Object[] { file.getAbsolutePath() });
         } catch (Exception e) {
-            logger.error("{}包加载失败.", new Object[] { file.getAbsolutePath(), e });
+            logger.error("{}加载失败.", new Object[] { file.getAbsolutePath(), e });
         }
     }
 

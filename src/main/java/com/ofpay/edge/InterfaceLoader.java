@@ -3,16 +3,6 @@
  */
 package com.ofpay.edge;
 
-import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
-
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.config.ApplicationConfig;
@@ -21,6 +11,15 @@ import com.alibaba.dubbo.config.RegistryConfig;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.ofpay.edge.listener.NotifyMe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
+
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * <p>
@@ -65,7 +64,7 @@ public class InterfaceLoader {
      * @param serviceUrl 指定访问的服务URL
      * @return
      */
-    public static Object getServiceBean(String serviceKey, String serviceUrl) {
+    public static ReferenceConfig<Object> getServiceReference(String serviceKey, String serviceUrl) {
 
         ReferenceConfig<Object> reference = null;// ref_config_cache.get(serviceKey + serviceUrl);
 
@@ -82,6 +81,7 @@ public class InterfaceLoader {
             reference.setRegistry(registry); // 多个注册中心可以用setRegistries()
             reference.setCheck(false);
             reference.setInterface(url.getPath());
+            reference.setTimeout(10000);
             if (StringUtils.hasText(serviceUrl)) {
                 reference.setUrl(serviceUrl); // 指定调用服务
             }
@@ -92,7 +92,7 @@ public class InterfaceLoader {
         }
 
         // 和本地bean一样使用xxxService
-        return reference.get(); // 注意：此代理对象内部封装了所有通讯细节，对象较重，请缓存复用
+        return reference; // 注意：此代理对象内部封装了所有通讯细节，对象较重，请缓存复用
     }
 
     /**
@@ -101,7 +101,7 @@ public class InterfaceLoader {
      * @return
      */
     public static Object getServiceBean(String serviceKey) {
-        return getServiceBean(serviceKey, null);
+        return getServiceReference(serviceKey, null).get();
     }
 
     /**
